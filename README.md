@@ -26,3 +26,9 @@ The project uses an in-memory data structure and does not require a database.
 ├── main.py
 ├── requirements.txt
 └── README.md
+
+## Project Status
+
+This project is completed as part of the FastAPI Student CRUD assignment.
+
+The API supports basic student management operations using CRUD functionality.
