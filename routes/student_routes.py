@@ -1,40 +1,25 @@
-from fastapi import APIRouter, HTTPException, status
-from typing import List
-from models.student import StudentCreate, StudentUpdate, StudentResponse
-from controllers.student_controller import student_controller
+from fastapi import APIRouter, status
+from models.student_model import Student, StudentUpdate
+from controllers import student_controller
 
 router = APIRouter(prefix="/students", tags=["Students"])
 
-@router.post("/", response_model=StudentResponse, status_code=status.HTTP_201_CREATED)
-def create_student(student: StudentCreate):
-    """Create a new student record"""
+@router.post("/", status_code=status.HTTP_201_CREATED)
+def create_student(student: Student):
     return student_controller.create_student(student)
 
-@router.get("/", response_model=List[StudentResponse], status_code=status.HTTP_200_OK)
-def get_all_students():
-    """Retrieve all student records"""
+@router.get("/", status_code=status.HTTP_200_OK)
+def read_all_students():
     return student_controller.get_all_students()
 
-@router.get("/{student_id}", response_model=StudentResponse, status_code=status.HTTP_200_OK)
-def get_student_by_id(student_id: int):
-    """Retrieve a single student record by ID"""
-    student = student_controller.get_student_by_id(student_id)
-    if not student:
-        raise HTTPException(status_code=404, detail="Student not found")
-    return student
+@router.get("/{id}", status_code=status.HTTP_200_OK)
+def read_student(id: int):
+    return student_controller.get_student_by_id(id)
 
-@router.put("/{student_id}", response_model=StudentResponse, status_code=status.HTTP_200_OK)
-def update_student(student_id: int, student_update: StudentUpdate):
-    """Update an existing student record"""
-    updated_student = student_controller.update_student(student_id, student_update)
-    if not updated_student:
-        raise HTTPException(status_code=404, detail="Student not found")
-    return updated_student
+@router.put("/{id}", status_code=status.HTTP_200_OK)
+def update_student(id: int, student_update: StudentUpdate):
+    return student_controller.update_student(id, student_update)
 
-@router.delete("/{student_id}", status_code=status.HTTP_204_NO_CONTENT)
-def delete_student(student_id: int):
-    """Delete a student record"""
-    success = student_controller.delete_student(student_id)
-    if not success:
-        raise HTTPException(status_code=404, detail="Student not found")
-    return None
+@router.delete("/{id}", status_code=status.HTTP_204_NO_CONTENT)
+def delete_student(id: int):
+    return student_controller.delete_student(id)
